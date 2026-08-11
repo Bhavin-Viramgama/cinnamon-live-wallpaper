@@ -25,6 +25,7 @@ class LiveWallpaperApplet extends Applet.IconApplet {
         this.settings.bind("mute-all", "mute_all", this.on_mute_all_changed);
         this.settings.bind("hide-icon", "hide_icon", this.on_hide_icon_changed);
         this.settings.bind("smart-pause", "smart_pause", this.on_smart_pause_changed);
+        this.settings.bind("start-muted", "start_muted");
         this.settings.bind("autostart", "autostart");
         this.settings.bind("target-display", "target_display", this.on_settings_changed);
 
@@ -42,11 +43,21 @@ class LiveWallpaperApplet extends Applet.IconApplet {
     }
 
     on_applet_added_to_panel() {
+        // Aggressively kill any leftover processes from previous Cinnamon sessions
+        Util.spawnCommandLine("pkill -f 'mpv.*mpv-wallpaper-socket'");
+        Util.spawnCommandLine("pkill -f 'xwinwrap.*mpv-wallpaper-socket'");
+
         if (this.hide_icon) {
             this.actor.hide();
         }
         if (this.autostart) {
             this.startWallpaper();
+        }
+    }
+
+    on_applet_removed_from_panel() {
+        if (this.isPlaying) {
+            this.stopWallpaper();
         }
     }
 
@@ -78,19 +89,19 @@ class LiveWallpaperApplet extends Applet.IconApplet {
         this.nextTrackItem.connect('activate', () => this.sendCommand(["playlist-next"]));
         this.menu.addMenuItem(this.nextTrackItem);
 
-        this.audioSeparator = new PopupMenu.PopupSeparatorMenuItem();
-        this.menu.addMenuItem(this.audioSeparator);
-
-        // Mute Toggle
-        this.muteItem = new PopupMenu.PopupIconMenuItem("Unmute", "audio-volume-muted-symbolic", St.IconType.SYMBOLIC);
-        this.muteItem.connect('activate', () => this.toggleMute());
-        this.menu.addMenuItem(this.muteItem);
-
-        // Volume Slider
-        this.volumeLabel = new PopupMenu.PopupMenuItem("Volume:", { reactive: false });
-        this.menu.addMenuItem(this.volumeLabel);
+        this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 
         this.volumeSlider = new PopupMenu.PopupSliderMenuItem(0.0);
+
+        this.volumeIconBtn = new St.Button({ track_hover: true });
+        this.volumeIcon = new St.Icon({ icon_name: "audio-volume-muted-symbolic", icon_type: St.IconType.SYMBOLIC, icon_size: 16 });
+        this.volumeIconBtn.set_child(this.volumeIcon);
+        this.volumeIconBtn.connect('clicked', () => this.toggleMute());
+
+        this.volumeSlider.removeActor(this.volumeSlider._slider);
+        this.volumeSlider.addActor(this.volumeIconBtn, { span: 0 });
+        this.volumeSlider.addActor(this.volumeSlider._slider, { span: -1, expand: true });
+
         this.volumeSlider.connect('value-changed', (slider, value) => {
             let volume = Math.round(value * 100);
             this.sendCommand(["set_property", "volume", volume]);
@@ -104,13 +115,16 @@ class LiveWallpaperApplet extends Applet.IconApplet {
     toggleMute() {
         this.isMuted = !this.isMuted;
         let iconName = this.isMuted ? "audio-volume-muted-symbolic" : "audio-volume-high-symbolic";
-        let label = this.isMuted ? "Unmute" : "Mute";
 
-        this.muteItem.label.set_text(label);
-        this.muteItem.setIconSymbolicName(iconName);
+        this.volumeIcon.set_icon_name(iconName);
 
         let property = this.isMuted ? "yes" : "no";
         this.sendCommand(["set_property", "mute", property]);
+        
+        if (!this.isMuted) {
+            let volume = Math.round(this.volumeSlider.value * 100);
+            this.sendCommand(["set_property", "volume", volume]);
+        }
     }
 
     on_applet_clicked(event) {
@@ -179,10 +193,20 @@ class LiveWallpaperApplet extends Applet.IconApplet {
             }
         }
 
-        return `xwinwrap ${displayArg} -fdt -ni -b -nf -- mpv -wid WID --loop-playlist=inf --no-osc --no-osd-bar --panscan=1.0 --mute=yes --input-ipc-server=/tmp/mpv-wallpaper-socket "${path}"`;
+        let vol = Math.round(this.volumeSlider.value * 100);
+        if (vol === 0 && !this.start_muted) vol = 50;
+        let muteArg = (this.mute_all || this.start_muted) ? "--mute=yes" : "--mute=no";
+        return `xwinwrap ${displayArg} -fdt -ni -b -nf -- mpv -wid WID --loop-playlist=inf --no-osc --no-osd-bar --panscan=1.0 ${muteArg} --volume=${vol} --input-ipc-server=/tmp/mpv-wallpaper-socket "${path}"`;
     }
 
     on_settings_changed() {
+        if (this.isPlaying) {
+            this.stopWallpaper();
+            this.startWallpaper();
+        }
+    }
+
+    on_refresh_clicked() {
         if (this.isPlaying) {
             this.stopWallpaper();
             this.startWallpaper();
@@ -199,17 +223,11 @@ class LiveWallpaperApplet extends Applet.IconApplet {
 
     on_mute_all_changed() {
         if (this.mute_all) {
-            this.audioSeparator.actor.hide();
-            this.muteItem.actor.hide();
-            this.volumeLabel.actor.hide();
             this.volumeSlider.actor.hide();
             if (this.isPlaying) {
                 this.sendCommand(["set_property", "mute", "yes"]);
             }
         } else {
-            this.audioSeparator.actor.show();
-            this.muteItem.actor.show();
-            this.volumeLabel.actor.show();
             this.volumeSlider.actor.show();
             if (this.isPlaying) {
                 let property = this.isMuted ? "yes" : "no";
@@ -250,20 +268,19 @@ class LiveWallpaperApplet extends Applet.IconApplet {
         this.nextTrackItem.setSensitive(!isSingle);
         this.prevTrackItem.setSensitive(!isSingle);
 
-        this.isMuted = true;
-        this.muteItem.label.set_text("Unmute");
-        this.muteItem.setIconSymbolicName("audio-volume-muted-symbolic");
-        this.volumeSlider.setValue(0.0);
+        this.isMuted = this.start_muted;
+        let iconName = this.isMuted ? "audio-volume-muted-symbolic" : "audio-volume-high-symbolic";
+        this.volumeIcon.set_icon_name(iconName);
+        
+        if (!this.isMuted && this.volumeSlider.value === 0) {
+            this.volumeSlider.setValue(0.5);
+        } else if (this.isMuted) {
+            this.volumeSlider.setValue(0.0);
+        }
 
         if (this.mute_all) {
-            this.audioSeparator.actor.hide();
-            this.muteItem.actor.hide();
-            this.volumeLabel.actor.hide();
             this.volumeSlider.actor.hide();
         } else {
-            this.audioSeparator.actor.show();
-            this.muteItem.actor.show();
-            this.volumeLabel.actor.show();
             this.volumeSlider.actor.show();
         }
 

@@ -51,6 +51,16 @@
         "description": "Mute all wallpapers (Hides audio controls)",
         "default": false
     },
+    "start-muted": {
+        "type": "switch",
+        "description": "Start wallpapers muted by default",
+        "default": true
+    },
+    "refresh-wallpaper": {
+        "type": "button",
+        "description": "Refresh Wallpaper",
+        "callback": "on_refresh_clicked"
+    },
     "hide-icon": {
         "type": "switch",
         "description": "Hide applet icon from the system tray",

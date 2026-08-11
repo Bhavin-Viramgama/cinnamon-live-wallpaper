@@ -11,16 +11,19 @@ A feature-rich, high-performance Cinnamon Desktop Applet that sets smooth video 
 ## ✨ Features
 
 - 🎥 **Multiple Playback Modes**:
-  - **Single Video File**: Play your favorite loop continuously.
-  - **Folder of Videos**: Automatically cycle through videos in a specified directory.
+  - **Single Video File**: Play your favorite video loop continuously.
+  - **Folder of Videos**: Automatically cycle through video files in a specified directory.
   - **Custom Playlist**: Build and re-order custom video playlists directly from applet settings.
   - **Manual Path Entry**: Enter custom file or stream paths.
 - ⚡ **Smart Power Saver (Auto-Pause)**: Automatically pauses video playback when windows are maximized or fullscreen on your active display to conserve GPU & CPU resources.
 - 🖥️ **Multi-Monitor Support**: Target a specific display (Display 1, Display 2, etc.) or stretch across all displays.
-- 🎵 **Full Audio & Media Controls**:
-  - Interactive volume slider and quick mute toggle in the panel popup menu.
-  - Next/Previous track buttons for playlists and folder playback.
-  - Global "Mute All" setting to disable audio output completely (`--ao=null`).
+- 🎵 **Flexible Audio & Volume Controls**:
+  - **Integrated Volume Slider**: Compact volume bar with a clickable mute/unmute icon right inside the panel popup menu.
+  - **Start Muted Option**: Launch wallpapers in silent mode by default with easy un-muting when needed.
+  - **Global Audio Mute**: Option to completely hide audio controls and silence all playback (`--mute=yes`).
+- ⏭️ **Playlist Navigation**: Skip to the next or previous video in folder or custom playlist mode directly from the applet menu.
+- 🔄 **Live Refresh Button**: Instantly reload playback settings from the configuration menu.
+- 🧹 **Clean Process Management**: Automatic process cleanup on startup, reload, or applet removal to prevent orphaned `mpv` or `xwinwrap` processes.
 - 🚀 **Autostart & Desktop Sync**: Automatically starts wallpaper playback on boot as soon as `nemo-desktop` is initialized.
 - 🎨 **Minimal & Non-Intrusive**: Option to hide the panel icon for a clean system tray.
 
@@ -31,7 +34,7 @@ A feature-rich, high-performance Cinnamon Desktop Applet that sets smooth video 
 The applet requires the following packages:
 - **`mpv`**: Lightweight video player backend.
 - **`xwinwrap`**: Utility to render video windows directly onto the desktop background (`desktop window`).
-- **`socat`**: Socket communication utility for live playback commands (IPC).
+- **`socat`**: Socket communication utility for live IPC commands.
 
 ---
 
@@ -88,27 +91,28 @@ Open the Applet Settings panel to customize playback and behavior:
 | **Playback Mode** | Dropdown | Choose between `Single Video File`, `Folder of Videos`, `Custom Ordered Playlist`, or `Manual Custom Path`. |
 | **Select a single video file** | File Chooser | Pick a video file (`.mp4`, `.mkv`, `.webm`, `.avi`, etc.). |
 | **Select a folder of videos** | Folder Chooser | Select a folder containing your video wallpaper collection. |
-| **Custom Ordered Playlist** | Interactive List | Add, arrange, and order individual video files. |
-| **Manually enter an exact path** | Text Entry | Direct path input for custom locations or URLs. |
+| **Custom Ordered Playlist** | Interactive List | Add, arrange, and re-order individual video files into a custom playlist. |
+| **Manually enter an exact path** | Text Entry | Direct path input for custom file paths or URLs. |
 
 ### 🖥️ Display & Behavior
 | Setting | Type | Description |
 | :--- | :--- | :--- |
-| **Enable Power Saver** | Switch | Automatically pauses playback when any window is maximized or fullscreen on the active monitor. |
+| **Enable Power Saver** | Switch | Automatically pauses playback when any window is maximized or fullscreen on the target monitor. |
 | **Target Display** | Dropdown | Choose a specific monitor (Display 1, 2, 3, 4) or select "All Displays". |
-| **Mute all wallpapers** | Switch | Completely disables audio backend output for quiet background playback. |
+| **Start wallpapers muted by default** | Switch | Wallpapers launch in muted state upon playback start. |
+| **Mute all wallpapers** | Switch | Completely hides audio controls and mutes audio output. |
+| **Refresh Wallpaper** | Button | Manually re-applies current playback configuration. |
 | **Hide applet icon** | Switch | Hides the applet icon from the system tray panel. |
-| **Start on boot** | Switch | Automatically starts wallpaper playback when Cinnamon boots up. |
+| **Start on boot** | Switch | Automatically starts wallpaper playback when Cinnamon desktop boots up. |
 
 ---
 
 ## 🎮 Panel Controls & Menu
 
 Clicking the **Live Wallpaper** panel applet icon opens quick controls:
-- ⏯️ **Start Wallpaper / Stop Wallpaper**: Toggle live wallpaper execution.
-- ⏭️ **Next Track / Previous Track**: Skip forward or backward in folder/playlist modes.
-- 🔇 **Mute / Unmute**: Instantly toggle audio output.
-- 🔊 **Volume Slider**: Adjust playback volume dynamically via IPC socket.
+- ⏯️ **Start Wallpaper / Stop Wallpaper**: Toggle live wallpaper playback.
+- ⏭️ **Next Track / Previous Track**: Skip forward or backward in folder or custom playlist modes.
+- 🔊 **Integrated Speaker & Volume Slider**: Click the speaker icon to toggle Mute/Unmute or drag the slider to adjust volume dynamically.
 
 ---
 
