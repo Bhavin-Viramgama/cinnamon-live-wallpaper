@@ -18,11 +18,7 @@
         "type": "list",
         "description": "Custom Ordered Playlist",
         "columns": [
-            {
-                "id": "file",
-                "title": "Video File",
-                "type": "file"
-            }
+            {"id": "file", "title": "Video File", "type": "file"}
         ],
         "default": [],
         "dependency": "wallpaper-mode=playlist"

@@ -22,9 +22,9 @@ class LiveWallpaperApplet extends Applet.IconApplet {
         this.settings.bind("video-file", "video_file", this.on_settings_changed);
         this.settings.bind("video-folder", "video_folder", this.on_settings_changed);
         this.settings.bind("custom-path", "custom_path", this.on_settings_changed);
-        this.settings.bind("mute-all", "mute_all", this.on_settings_changed);
-        this.settings.bind("hide-icon", "hide_icon", this.on_settings_changed);
-        this.settings.bind("smart-pause", "smart_pause", this.on_settings_changed);
+        this.settings.bind("mute-all", "mute_all", this.on_mute_all_changed);
+        this.settings.bind("hide-icon", "hide_icon", this.on_hide_icon_changed);
+        this.settings.bind("smart-pause", "smart_pause", this.on_smart_pause_changed);
         this.settings.bind("autostart", "autostart");
         this.settings.bind("target-display", "target_display", this.on_settings_changed);
 
@@ -179,20 +179,57 @@ class LiveWallpaperApplet extends Applet.IconApplet {
             }
         }
 
-        let audioArg = this.mute_all ? "--ao=null" : "--mute=yes";
-        return `xwinwrap ${displayArg} -fdt -ni -b -nf -- mpv -wid WID --loop-playlist=inf --no-osc --no-osd-bar --panscan=1.0 ${audioArg} --input-ipc-server=/tmp/mpv-wallpaper-socket "${path}"`;
+        return `xwinwrap ${displayArg} -fdt -ni -b -nf -- mpv -wid WID --loop-playlist=inf --no-osc --no-osd-bar --panscan=1.0 --mute=yes --input-ipc-server=/tmp/mpv-wallpaper-socket "${path}"`;
     }
 
     on_settings_changed() {
+        if (this.isPlaying) {
+            this.stopWallpaper();
+            this.startWallpaper();
+        }
+    }
+
+    on_hide_icon_changed() {
         if (this.hide_icon) {
             this.actor.hide();
         } else {
             this.actor.show();
         }
+    }
 
+    on_mute_all_changed() {
+        if (this.mute_all) {
+            this.audioSeparator.actor.hide();
+            this.muteItem.actor.hide();
+            this.volumeLabel.actor.hide();
+            this.volumeSlider.actor.hide();
+            if (this.isPlaying) {
+                this.sendCommand(["set_property", "mute", "yes"]);
+            }
+        } else {
+            this.audioSeparator.actor.show();
+            this.muteItem.actor.show();
+            this.volumeLabel.actor.show();
+            this.volumeSlider.actor.show();
+            if (this.isPlaying) {
+                let property = this.isMuted ? "yes" : "no";
+                this.sendCommand(["set_property", "mute", property]);
+            }
+        }
+    }
+
+    on_smart_pause_changed() {
         if (this.isPlaying) {
-            this.stopWallpaper();
-            this.startWallpaper();
+            if (this.smart_pause && this.smartPauseLoopId === 0) {
+                this.smartPauseLoopId = Mainloop.timeout_add_seconds(1, () => this._onSmartPauseTick());
+            } else if (!this.smart_pause && this.smartPauseLoopId > 0) {
+                Mainloop.source_remove(this.smartPauseLoopId);
+                this.smartPauseLoopId = 0;
+                if (this.isSmartPaused) {
+                    this.isSmartPaused = false;
+                    this.sendCommand(["set_property", "pause", false]);
+                }
+            }
         }
     }
 
