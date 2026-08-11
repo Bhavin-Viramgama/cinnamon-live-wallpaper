@@ -1,2 +1,136 @@
-# cinnamon-live-wallpaper
-A Cinnamon applet that brings seamless live video wallpapers to Linux Mint.
+# Live Wallpaper Applet for Cinnamon Desktop
+
+[![Cinnamon Desktop Environment](https://img.shields.io/badge/Cinnamon-Desktop%20Environment-orange.svg)](https://projects.linuxmint.com/cinnamon/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Dependencies](https://img.shields.io/badge/Dependencies-mpv%20%7C%20xwinwrap%20%7C%20socat-blue.svg)](#-prerequisites--dependencies)
+
+A feature-rich, high-performance Cinnamon Desktop Applet that sets smooth video wallpapers on Linux Mint and other Cinnamon-based Linux distributions. Powered by `mpv` and `xwinwrap`, it features smart power-saving, multi-monitor support, custom playlists, and live audio/media controls right from your system tray.
+
+---
+
+## ✨ Features
+
+- 🎥 **Multiple Playback Modes**:
+  - **Single Video File**: Play your favorite loop continuously.
+  - **Folder of Videos**: Automatically cycle through videos in a specified directory.
+  - **Custom Playlist**: Build and re-order custom video playlists directly from applet settings.
+  - **Manual Path Entry**: Enter custom file or stream paths.
+- ⚡ **Smart Power Saver (Auto-Pause)**: Automatically pauses video playback when windows are maximized or fullscreen on your active display to conserve GPU & CPU resources.
+- 🖥️ **Multi-Monitor Support**: Target a specific display (Display 1, Display 2, etc.) or stretch across all displays.
+- 🎵 **Full Audio & Media Controls**:
+  - Interactive volume slider and quick mute toggle in the panel popup menu.
+  - Next/Previous track buttons for playlists and folder playback.
+  - Global "Mute All" setting to disable audio output completely (`--ao=null`).
+- 🚀 **Autostart & Desktop Sync**: Automatically starts wallpaper playback on boot as soon as `nemo-desktop` is initialized.
+- 🎨 **Minimal & Non-Intrusive**: Option to hide the panel icon for a clean system tray.
+
+---
+
+## 🛠️ Prerequisites & Dependencies
+
+The applet requires the following packages:
+- **`mpv`**: Lightweight video player backend.
+- **`xwinwrap`**: Utility to render video windows directly onto the desktop background (`desktop window`).
+- **`socat`**: Socket communication utility for live playback commands (IPC).
+
+---
+
+## 📥 Installation
+
+### 1. Clone or Download the Repository
+
+```bash
+git clone https://github.com/bhavin-viramgama/live-wallpaper.git
+cd live-wallpaper
+```
+
+### 2. Copy the Applet Directory
+
+Copy the applet folder `live-wallpaper@bhavin-viramgama` to your local Cinnamon applets directory:
+
+```bash
+mkdir -p ~/.local/share/cinnamon/applets/
+cp -r live-wallpaper@bhavin-viramgama ~/.local/share/cinnamon/applets/
+```
+
+### 3. Install Required Dependencies
+
+An automated dependency installation script is provided inside the applet directory:
+
+```bash
+chmod +x ~/.local/share/cinnamon/applets/live-wallpaper@bhavin-viramgama/install-deps.sh
+~/.local/share/cinnamon/applets/live-wallpaper@bhavin-viramgama/install-deps.sh
+```
+
+> **Manual Package Installation (Ubuntu / Debian / Linux Mint):**
+> ```bash
+> sudo apt update
+> sudo apt install -y mpv socat git make gcc libx11-dev libxext-dev libxrender-dev
+> ```
+> *If `xwinwrap` is not available in your package repository, the `install-deps.sh` script will automatically compile and install `xwinwrap` from source.*
+
+### 4. Enable the Applet
+
+1. Open **System Settings** -> **Applets** (or right-click your panel and select *Add applets to the panel*).
+2. Locate **Live Wallpaper** under the installed applets list.
+3. Click the **`+`** button to add it to your panel.
+4. Right-click the applet icon and select **Configure** to select your video file or playlist.
+
+---
+
+## ⚙️ Configuration & Settings
+
+Open the Applet Settings panel to customize playback and behavior:
+
+### 📄 Wallpaper Selection
+| Setting | Type | Description |
+| :--- | :--- | :--- |
+| **Playback Mode** | Dropdown | Choose between `Single Video File`, `Folder of Videos`, `Custom Ordered Playlist`, or `Manual Custom Path`. |
+| **Select a single video file** | File Chooser | Pick a video file (`.mp4`, `.mkv`, `.webm`, `.avi`, etc.). |
+| **Select a folder of videos** | Folder Chooser | Select a folder containing your video wallpaper collection. |
+| **Custom Ordered Playlist** | Interactive List | Add, arrange, and order individual video files. |
+| **Manually enter an exact path** | Text Entry | Direct path input for custom locations or URLs. |
+
+### 🖥️ Display & Behavior
+| Setting | Type | Description |
+| :--- | :--- | :--- |
+| **Enable Power Saver** | Switch | Automatically pauses playback when any window is maximized or fullscreen on the active monitor. |
+| **Target Display** | Dropdown | Choose a specific monitor (Display 1, 2, 3, 4) or select "All Displays". |
+| **Mute all wallpapers** | Switch | Completely disables audio backend output for quiet background playback. |
+| **Hide applet icon** | Switch | Hides the applet icon from the system tray panel. |
+| **Start on boot** | Switch | Automatically starts wallpaper playback when Cinnamon boots up. |
+
+---
+
+## 🎮 Panel Controls & Menu
+
+Clicking the **Live Wallpaper** panel applet icon opens quick controls:
+- ⏯️ **Start Wallpaper / Stop Wallpaper**: Toggle live wallpaper execution.
+- ⏭️ **Next Track / Previous Track**: Skip forward or backward in folder/playlist modes.
+- 🔇 **Mute / Unmute**: Instantly toggle audio output.
+- 🔊 **Volume Slider**: Adjust playback volume dynamically via IPC socket.
+
+---
+
+## 📁 Repository Structure
+
+```text
+├── live-wallpaper@bhavin-viramgama/
+│   ├── applet.js            # Main Cinnamon Applet logic & IPC controller
+│   ├── metadata.json        # Cinnamon Applet metadata & UUID
+│   ├── settings-schema.json # Applet settings UI definition
+│   └── install-deps.sh      # Dependency installer script (mpv, xwinwrap, socat)
+└── README.md                # Project documentation
+```
+
+---
+
+## 🤝 Contributing
+
+Contributions, bug reports, and feature requests are welcome! Feel free to open an issue or pull request.
+
+---
+
+## 📜 License
+
+This project is open-source software licensed under the [MIT License](LICENSE).
