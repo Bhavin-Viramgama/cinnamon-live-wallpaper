@@ -10,7 +10,8 @@ if ! command -v apt >/dev/null 2>&1; then
 fi
 
 sudo apt update
-sudo apt install -y mpv socat git make gcc libx11-dev libxext-dev libxrender-dev
+# sudo apt install -y mpv socat git make gcc libx11-dev libxext-dev libxrender-dev
+sudo apt install -y mpv socat git make gcc libx11-dev libxext-dev libxrender-dev xdotool
 
 # Install xwinwrap from source if not available
 if ! command -v xwinwrap >/dev/null 2>&1; then
