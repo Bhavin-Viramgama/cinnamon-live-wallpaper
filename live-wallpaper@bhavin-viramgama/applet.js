@@ -66,6 +66,7 @@ class LiveWallpaperApplet extends Applet.IconApplet {
         if (!GLib.find_program_in_path("mpv")) missing.push("mpv");
         if (!GLib.find_program_in_path("xwinwrap")) missing.push("xwinwrap");
         if (!GLib.find_program_in_path("socat")) missing.push("socat");
+        if (!GLib.find_program_in_path("xdotool")) missing.push("xdotool");
 
         if (missing.length > 0) {
             let msg = `Missing dependencies: ${missing.join(', ')}. Please run the install-deps.sh script inside ~/.local/share/cinnamon/applets/${this.uuid}`;
@@ -120,7 +121,7 @@ class LiveWallpaperApplet extends Applet.IconApplet {
 
         let property = this.isMuted ? "yes" : "no";
         this.sendCommand(["set_property", "mute", property]);
-        
+
         if (!this.isMuted) {
             let volume = Math.round(this.volumeSlider.value * 100);
             this.sendCommand(["set_property", "volume", volume]);
@@ -196,20 +197,26 @@ class LiveWallpaperApplet extends Applet.IconApplet {
         let vol = Math.round(this.volumeSlider.value * 100);
         if (vol === 0 && !this.start_muted) vol = 50;
         let muteArg = (this.mute_all || this.start_muted) ? "--mute=yes" : "--mute=no";
-        return `xwinwrap ${displayArg} -fdt -ni -b -nf -- mpv -wid WID --loop-playlist=inf --no-osc --no-osd-bar --panscan=1.0 ${muteArg} --volume=${vol} --input-ipc-server=/tmp/mpv-wallpaper-socket "${path}"`;
+        return `xwinwrap ${displayArg} -fdt -ni -b -nf -un -- mpv -wid WID --loop-playlist=inf --no-osc --no-osd-bar --panscan=1.0 ${muteArg} --volume=${vol} --input-ipc-server=/tmp/mpv-wallpaper-socket "${path}"`;
     }
 
     on_settings_changed() {
         if (this.isPlaying) {
             this.stopWallpaper();
-            this.startWallpaper();
+            Mainloop.timeout_add(250, () => {
+                this.startWallpaper();
+                return false;
+            });
         }
     }
 
     on_refresh_clicked() {
         if (this.isPlaying) {
             this.stopWallpaper();
-            this.startWallpaper();
+            Mainloop.timeout_add(250, () => {
+                this.startWallpaper();
+                return false;
+            });
         }
     }
 
@@ -258,7 +265,15 @@ class LiveWallpaperApplet extends Applet.IconApplet {
             return;
         }
 
-        let execCmd = `bash -c "while ! pgrep -x nemo-desktop > /dev/null; do sleep 0.5; done; ${cmd.replace(/"/g, '\\"')}"`;
+        let execCmd = `bash -c "
+            while ! xdotool search --class nemo-desktop >/dev/null 2>&1; do sleep 0.1; done;
+            while ! pactl info >/dev/null 2>&1; do sleep 0.1; done;
+            rm -f /tmp/mpv-wallpaper-socket;
+            ${cmd.replace(/"/g, '\\"')} &
+            while ! xdotool search --class xwinwrap >/dev/null 2>&1; do sleep 0.1; done;
+            xdotool search --class xwinwrap windowlower >/dev/null 2>&1;
+            wait
+        "`;
 
         Util.spawnCommandLine(execCmd);
         this.isPlaying = true;
@@ -271,7 +286,7 @@ class LiveWallpaperApplet extends Applet.IconApplet {
         this.isMuted = this.start_muted;
         let iconName = this.isMuted ? "audio-volume-muted-symbolic" : "audio-volume-high-symbolic";
         this.volumeIcon.set_icon_name(iconName);
-        
+
         if (!this.isMuted && this.volumeSlider.value === 0) {
             this.volumeSlider.setValue(0.5);
         } else if (this.isMuted) {
