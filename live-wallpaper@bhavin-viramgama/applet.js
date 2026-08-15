@@ -25,6 +25,7 @@ class LiveWallpaperApplet extends Applet.IconApplet {
         this.settings.bind("mute-all", "mute_all", this.on_mute_all_changed);
         this.settings.bind("hide-icon", "hide_icon", this.on_hide_icon_changed);
         this.settings.bind("smart-pause", "smart_pause", this.on_smart_pause_changed);
+        this.settings.bind("shuffle-playlist", "shuffle_playlist", this.on_shuffle_changed);
         this.settings.bind("start-muted", "start_muted");
         this.settings.bind("autostart", "autostart");
         this.settings.bind("target-display", "target_display", this.on_settings_changed);
@@ -89,6 +90,13 @@ class LiveWallpaperApplet extends Applet.IconApplet {
         this.nextTrackItem = new PopupMenu.PopupIconMenuItem("Next", "media-skip-forward-symbolic", St.IconType.SYMBOLIC);
         this.nextTrackItem.connect('activate', () => this.sendCommand(["playlist-next"]));
         this.menu.addMenuItem(this.nextTrackItem);
+
+        this.shuffleSwitch = new PopupMenu.PopupSwitchMenuItem("Shuffle Playlist", this.shuffle_playlist);
+        this.shuffleSwitch.connect('toggled', (item, state) => {
+            this.settings.setValue("shuffle-playlist", state);
+        });
+        this.menu.addMenuItem(this.shuffleSwitch);
+
 
         this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 
@@ -197,7 +205,8 @@ class LiveWallpaperApplet extends Applet.IconApplet {
         let vol = Math.round(this.volumeSlider.value * 100);
         if (vol === 0 && !this.start_muted) vol = 50;
         let muteArg = (this.mute_all || this.start_muted) ? "--mute=yes" : "--mute=no";
-        return `xwinwrap ${displayArg} -fdt -ni -b -nf -un -- mpv -wid WID --loop-playlist=inf --no-osc --no-osd-bar --panscan=1.0 ${muteArg} --volume=${vol} --input-ipc-server=/tmp/mpv-wallpaper-socket "${path}"`;
+        let shuffleArg = this.shuffle_playlist ? "--shuffle" : "";
+        return `xwinwrap ${displayArg} -fdt -ni -b -nf -un -- mpv -wid WID --loop-playlist=inf --no-osc --no-osd-bar --panscan=1.0 ${muteArg} ${shuffleArg} --volume=${vol} --input-ipc-server=/tmp/mpv-wallpaper-socket "${path}"`;
     }
 
     on_settings_changed() {
@@ -225,6 +234,19 @@ class LiveWallpaperApplet extends Applet.IconApplet {
             this.actor.hide();
         } else {
             this.actor.show();
+        }
+    }
+
+    on_shuffle_changed() {
+        if (this.shuffleSwitch) {
+            this.shuffleSwitch.setToggleState(this.shuffle_playlist);
+        }
+        if (this.isPlaying) {
+            if (this.shuffle_playlist) {
+                this.sendCommand(["playlist-shuffle"]);
+            } else {
+                this.sendCommand(["playlist-unshuffle"]);
+            }
         }
     }
 
@@ -282,6 +304,7 @@ class LiveWallpaperApplet extends Applet.IconApplet {
         let isSingle = (this.wallpaper_mode === "single" || this.wallpaper_mode === "custom");
         this.nextTrackItem.setSensitive(!isSingle);
         this.prevTrackItem.setSensitive(!isSingle);
+        this.shuffleSwitch.setSensitive(!isSingle);
 
         this.isMuted = this.start_muted;
         let iconName = this.isMuted ? "audio-volume-muted-symbolic" : "audio-volume-high-symbolic";

@@ -42,6 +42,12 @@
         "default": "",
         "dependency": "wallpaper-mode=custom"
     },
+    "shuffle-playlist": {
+        "type": "switch",
+        "description": "Shuffle Playlist",
+        "default": false,
+        "dependency": "wallpaper-mode!=single"
+    },
     "display_header": {
         "type": "header",
         "description": "Display & Behavior"

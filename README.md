@@ -2,9 +2,9 @@
 
 [![Cinnamon Desktop Environment](https://img.shields.io/badge/Cinnamon-Desktop%20Environment-orange.svg)](https://projects.linuxmint.com/cinnamon/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Dependencies](https://img.shields.io/badge/Dependencies-mpv%20%7C%20xwinwrap%20%7C%20socat-blue.svg)](#-prerequisites--dependencies)
+[![Dependencies](https://img.shields.io/badge/Dependencies-mpv%20%7C%20xwinwrap%20%7C%20socat%20%7C%20xdotool-blue.svg)](#-prerequisites--dependencies)
 
-A feature-rich, high-performance Cinnamon Desktop Applet that sets smooth video wallpapers on Linux Mint and other Cinnamon-based Linux distributions. Powered by `mpv` and `xwinwrap`, it features smart power-saving, multi-monitor support, custom playlists, and live audio/media controls right from your system tray.
+A feature-rich, high-performance Cinnamon Desktop Applet that sets smooth video wallpapers on Linux Mint and other Cinnamon-based Linux distributions. Powered by `mpv` and `xwinwrap`, it features smart power-saving, multi-monitor support, custom playlists, random shuffle playback, and live audio/media controls right from your system tray.
 
 ---
 
@@ -15,6 +15,7 @@ A feature-rich, high-performance Cinnamon Desktop Applet that sets smooth video 
   - **Folder of Videos**: Automatically cycle through video files in a specified directory.
   - **Custom Playlist**: Build and re-order custom video playlists directly from applet settings.
   - **Manual Path Entry**: Enter custom file or stream paths.
+- 🔀 **Playlist Shuffle Mode**: Toggle shuffle on/off directly from the panel popup menu or applet settings for randomized playback order.
 - ⚡ **Smart Power Saver (Auto-Pause)**: Automatically pauses video playback when windows are maximized or fullscreen on your active display to conserve GPU & CPU resources.
 - 🖥️ **Multi-Monitor Support**: Target a specific display (Display 1, Display 2, etc.) or stretch across all displays.
 - 🎵 **Flexible Audio & Volume Controls**:
@@ -22,9 +23,10 @@ A feature-rich, high-performance Cinnamon Desktop Applet that sets smooth video 
   - **Start Muted Option**: Launch wallpapers in silent mode by default with easy un-muting when needed.
   - **Global Audio Mute**: Option to completely hide audio controls and silence all playback (`--mute=yes`).
 - ⏭️ **Playlist Navigation**: Skip to the next or previous video in folder or custom playlist mode directly from the applet menu.
+- 🖼️ **Seamless Desktop Layering**: Uses `xdotool` to ensure the live wallpaper window renders beneath desktop icons and waits for desktop (`nemo-desktop`) and audio (`PulseAudio`/`PipeWire`) server readiness on boot.
 - 🔄 **Live Refresh Button**: Instantly reload playback settings from the configuration menu.
 - 🧹 **Clean Process Management**: Automatic process cleanup on startup, reload, or applet removal to prevent orphaned `mpv` or `xwinwrap` processes.
-- 🚀 **Autostart & Desktop Sync**: Automatically starts wallpaper playback on boot as soon as `nemo-desktop` is initialized.
+- 🚀 **Autostart & Desktop Sync**: Automatically starts wallpaper playback on boot as soon as desktop and audio services are ready.
 - 🎨 **Minimal & Non-Intrusive**: Option to hide the panel icon for a clean system tray.
 
 ---
@@ -35,6 +37,7 @@ The applet requires the following packages:
 - **`mpv`**: Lightweight video player backend.
 - **`xwinwrap`**: Utility to render video windows directly onto the desktop background (`desktop window`).
 - **`socat`**: Socket communication utility for live IPC commands.
+- **`xdotool`**: Window management tool to lower wallpaper window layering below desktop icons and monitor server readiness.
 
 ---
 
@@ -68,7 +71,7 @@ chmod +x ~/.local/share/cinnamon/applets/live-wallpaper@bhavin-viramgama/install
 > **Manual Package Installation (Ubuntu / Debian / Linux Mint):**
 > ```bash
 > sudo apt update
-> sudo apt install -y mpv socat git make gcc libx11-dev libxext-dev libxrender-dev
+> sudo apt install -y mpv socat git make gcc libx11-dev libxext-dev libxrender-dev xdotool
 > ```
 > *If `xwinwrap` is not available in your package repository, the `install-deps.sh` script will automatically compile and install `xwinwrap` from source.*
 
@@ -93,6 +96,7 @@ Open the Applet Settings panel to customize playback and behavior:
 | **Select a folder of videos** | Folder Chooser | Select a folder containing your video wallpaper collection. |
 | **Custom Ordered Playlist** | Interactive List | Add, arrange, and re-order individual video files into a custom playlist. |
 | **Manually enter an exact path** | Text Entry | Direct path input for custom file paths or URLs. |
+| **Shuffle Playlist** | Switch | Randomly shuffles playback order for folder or playlist mode. |
 
 ### 🖥️ Display & Behavior
 | Setting | Type | Description |
@@ -112,6 +116,7 @@ Open the Applet Settings panel to customize playback and behavior:
 Clicking the **Live Wallpaper** panel applet icon opens quick controls:
 - ⏯️ **Start Wallpaper / Stop Wallpaper**: Toggle live wallpaper playback.
 - ⏭️ **Next Track / Previous Track**: Skip forward or backward in folder or custom playlist modes.
+- 🔀 **Shuffle Playlist Switch**: Easily toggle randomized playback on or off on the fly.
 - 🔊 **Integrated Speaker & Volume Slider**: Click the speaker icon to toggle Mute/Unmute or drag the slider to adjust volume dynamically.
 
 ---
@@ -123,7 +128,7 @@ Clicking the **Live Wallpaper** panel applet icon opens quick controls:
 │   ├── applet.js            # Main Cinnamon Applet logic & IPC controller
 │   ├── metadata.json        # Cinnamon Applet metadata & UUID
 │   ├── settings-schema.json # Applet settings UI definition
-│   └── install-deps.sh      # Dependency installer script (mpv, xwinwrap, socat)
+│   └── install-deps.sh      # Dependency installer script (mpv, xwinwrap, socat, xdotool)
 └── README.md                # Project documentation
 ```
 
