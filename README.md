@@ -21,7 +21,7 @@ Watch the **Live Wallpaper Applet** in action with seamless desktop video render
 
 | Panel Popup Controls | Configuration & Settings |
 | :---: | :---: |
-| ![Live Wallpaper Panel Menu](live-wallpaper@bhavin-viramgama/assets/screenshot-menu.png) | ![Live Wallpaper Settings Panel](live-wallpaper@bhavin-viramgama/assets/screenshot-settings.png) |
+| ![Live Wallpaper Panel Menu](CinnamonLiveWallpaper@bhavin-viramgama/assets/screenshot-menu.png) | ![Live Wallpaper Settings Panel](CinnamonLiveWallpaper@bhavin-viramgama/assets/screenshot-settings.png) |
 | *Quick access to start/stop, skip tracks, toggle shuffle, and volume controls* | *Configure video files, folders, playlists, power saver, and display targets* |
 
 ---
@@ -74,7 +74,7 @@ Copy the applet folder to your local Cinnamon applets directory:
 
 ```bash
 mkdir -p ~/.local/share/cinnamon/applets/
-cp -r live-wallpaper@bhavin-viramgama/files/live-wallpaper@bhavin-viramgama ~/.local/share/cinnamon/applets/
+cp -r CinnamonLiveWallpaper@bhavin-viramgama/files/CinnamonLiveWallpaper@bhavin-viramgama ~/.local/share/cinnamon/applets/
 ```
 
 ### 3. Install Required Dependencies
@@ -82,8 +82,8 @@ cp -r live-wallpaper@bhavin-viramgama/files/live-wallpaper@bhavin-viramgama ~/.l
 An automated dependency installation script is provided inside the applet directory:
 
 ```bash
-chmod +x ~/.local/share/cinnamon/applets/live-wallpaper@bhavin-viramgama/install-deps.sh
-~/.local/share/cinnamon/applets/live-wallpaper@bhavin-viramgama/install-deps.sh
+chmod +x ~/.local/share/cinnamon/applets/CinnamonLiveWallpaper@bhavin-viramgama/install-deps.sh
+~/.local/share/cinnamon/applets/CinnamonLiveWallpaper@bhavin-viramgama/install-deps.sh
 ```
 
 > **Manual Package Installation (Ubuntu / Debian / Linux Mint):**
@@ -144,7 +144,7 @@ Clicking the **Live Wallpaper** panel applet icon opens quick controls:
 Standard Cinnamon Spices repository layout:
 
 ```text
-├── live-wallpaper@bhavin-viramgama/
+├── CinnamonLiveWallpaper@bhavin-viramgama/
 │   ├── CHANGELOG.md             # Version history
 │   ├── README.md                # Applet documentation
 │   ├── icon.png                 # Spices catalog icon
@@ -153,7 +153,7 @@ Standard Cinnamon Spices repository layout:
 │   │   ├── screenshot-menu.png  # Popup menu screenshot
 │   │   └── screenshot-settings.png # Applet settings screenshot
 │   └── files/
-│       └── live-wallpaper@bhavin-viramgama/
+│       └── CinnamonLiveWallpaper@bhavin-viramgama/
 │           ├── applet.js        # Main Cinnamon Applet logic & IPC controller
 │           ├── icon.png         # Applet tray icon
 │           ├── metadata.json    # Applet metadata & UUID
