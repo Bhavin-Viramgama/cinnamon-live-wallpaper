@@ -143,16 +143,18 @@ Clicking the **Live Wallpaper** panel applet icon opens quick controls:
 
 ```text
 └── live-wallpaper@bhavin-viramgama/
+    ├── README.md            # Project documentation
+    ├── CHANGELOG.md         # Release history
+    ├── icon.png             # Spices thumbnail icon
     ├── assets/
     │   ├── screenshot-menu.png     # Screenshot of panel popup menu
     │   └── screenshot-settings.png # Screenshot of applet settings window
-    ├── applet.js            # Main Cinnamon Applet logic & IPC controller
-    ├── metadata.json        # Cinnamon Applet metadata & UUID
-    ├── settings-schema.json # Applet settings UI definition
-    ├── install-deps.sh      # Dependency installer script (mpv, xwinwrap, socat, xdotool)
-    ├── icon.png             # Spices thumbnail icon
-    ├── CHANGELOG.md         # Release history
-    └── README.md            # Project documentation
+    └── files/
+        └── live-wallpaper@bhavin-viramgama/
+            ├── applet.js            # Main Cinnamon Applet logic & IPC controller
+            ├── metadata.json        # Cinnamon Applet metadata & UUID
+            ├── settings-schema.json # Applet settings UI definition
+            └── install-deps.sh      # Dependency installer script
 ```
 
 ---

@@ -15,8 +15,6 @@ Watch the **Live Wallpaper Applet** in action with seamless desktop video render
 
 [demo.mp4](https://github.com/user-attachments/assets/8a47c62c-184f-4f1e-b118-0f2079d73d07)
 
-*(Note: Replace the link above with your uploaded GitHub video URL or animated GIF file like `assets/demo.mp4`)*
-
 ---
 
 ### 🖼️ Screenshots
