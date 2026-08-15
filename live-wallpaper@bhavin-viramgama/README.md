@@ -13,7 +13,7 @@ A feature-rich, high-performance Cinnamon Desktop Applet that sets smooth video 
 ### 📽️ Video Demonstration
 Watch the **Live Wallpaper Applet** in action with seamless desktop video rendering, auto-pausing power saver, and system tray controls:
 
-[demo.mp4](https://github.com/user-attachments/assets/8a47c62c-184f-4f1e-b118-0f2079d73d07)
+![Live Wallpaper Demo](assets/demo.mp4)
 
 ---
 
@@ -64,17 +64,17 @@ The applet requires the following packages:
 ### 1. Clone or Download the Repository
 
 ```bash
-git clone https://github.com/bhavin-viramgama/live-wallpaper.git
-cd live-wallpaper
+git clone https://github.com/Bhavin-Viramgama/cinnamon-live-wallpaper.git
+cd cinnamon-live-wallpaper
 ```
 
 ### 2. Copy the Applet Directory
 
-Copy the applet folder `live-wallpaper@bhavin-viramgama` to your local Cinnamon applets directory:
+Copy the applet files directory to your local Cinnamon applets directory:
 
 ```bash
 mkdir -p ~/.local/share/cinnamon/applets/
-cp -r live-wallpaper@bhavin-viramgama ~/.local/share/cinnamon/applets/
+cp -r files/live-wallpaper@bhavin-viramgama ~/.local/share/cinnamon/applets/
 ```
 
 ### 3. Install Required Dependencies
@@ -142,19 +142,20 @@ Clicking the **Live Wallpaper** panel applet icon opens quick controls:
 ## 📁 Repository Structure
 
 ```text
-└── live-wallpaper@bhavin-viramgama/
-    ├── README.md            # Project documentation
-    ├── CHANGELOG.md         # Release history
-    ├── icon.png             # Spices thumbnail icon
-    ├── assets/
-    │   ├── screenshot-menu.png     # Screenshot of panel popup menu
-    │   └── screenshot-settings.png # Screenshot of applet settings window
-    └── files/
-        └── live-wallpaper@bhavin-viramgama/
-            ├── applet.js            # Main Cinnamon Applet logic & IPC controller
-            ├── metadata.json        # Cinnamon Applet metadata & UUID
-            ├── settings-schema.json # Applet settings UI definition
-            └── install-deps.sh      # Dependency installer script
+├── CHANGELOG.md             # Version history
+├── README.md                # Applet documentation
+├── icon.png                 # Spices catalog icon
+├── assets/
+│   ├── demo.mp4             # Video demonstration
+│   ├── screenshot-menu.png  # Popup menu screenshot
+│   └── screenshot-settings.png # Applet settings screenshot
+└── files/
+    └── live-wallpaper@bhavin-viramgama/
+        ├── applet.js        # Main Cinnamon Applet logic & IPC controller
+        ├── icon.png         # Applet tray icon
+        ├── metadata.json    # Applet metadata & UUID
+        ├── settings-schema.json # Applet settings UI definition
+        └── install-deps.sh  # Automated dependency installer script
 ```
 
 ---
