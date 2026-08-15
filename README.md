@@ -1,7 +1,7 @@
 # Live Wallpaper Applet for Cinnamon Desktop
 
 [![Cinnamon Desktop Environment](https://img.shields.io/badge/Cinnamon-Desktop%20Environment-orange.svg)](https://projects.linuxmint.com/cinnamon/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 [![Dependencies](https://img.shields.io/badge/Dependencies-mpv%20%7C%20xwinwrap%20%7C%20socat%20%7C%20xdotool-blue.svg)](#-prerequisites--dependencies)
 
 A feature-rich, high-performance Cinnamon Desktop Applet that sets smooth video wallpapers on Linux Mint and other Cinnamon-based Linux distributions. Powered by `mpv` and `xwinwrap`, it features smart power-saving, multi-monitor support, custom playlists, random shuffle playback, and live audio/media controls right from your system tray.
@@ -172,4 +172,4 @@ Contributions, bug reports, and feature requests are welcome! Feel free to open 
 
 ## 📜 License
 
-This project is open-source software licensed under the [MIT License](LICENSE).
+This project is open-source software licensed under the [GNU General Public License v3.0](LICENSE).
