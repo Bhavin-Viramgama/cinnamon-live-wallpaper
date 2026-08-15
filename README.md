@@ -32,7 +32,6 @@ Watch the **Live Wallpaper Applet** in action with seamless desktop video render
   - **Single Video File**: Play your favorite video loop continuously.
   - **Folder of Videos**: Automatically cycle through video files in a specified directory.
   - **Custom Playlist**: Build and re-order custom video playlists directly from applet settings.
-  - **Manual Path Entry**: Enter custom file or stream paths.
 - 🔀 **Playlist Shuffle Mode**: Toggle shuffle on/off directly from the panel popup menu or applet settings for randomized playback order.
 - ⚡ **Smart Power Saver (Auto-Pause)**: Automatically pauses video playback when windows are maximized or fullscreen on your active display to conserve GPU & CPU resources.
 - 🖥️ **Multi-Monitor Support**: Target a specific display (Display 1, Display 2, etc.) or stretch across all displays.
@@ -99,6 +98,17 @@ chmod +x ~/.local/share/cinnamon/applets/CinnamonLiveWallpaper@bhavin-viramgama/
 2. Locate **Live Wallpaper** under the installed applets list.
 3. Click the **`+`** button to add it to your panel.
 4. Right-click the applet icon and select **Configure** to select your video file or playlist.
+
+### 5. Uninstallation
+
+To completely remove the applet from your system:
+
+1. Right-click the applet icon on your panel and select **Remove 'Live Wallpaper'**.
+2. Delete the applet directory:
+   ```bash
+   rm -rf ~/.local/share/cinnamon/applets/CinnamonLiveWallpaper@bhavin-viramgama
+   ```
+3. Restart Cinnamon (`Alt` + `F2`, type `r`, `Enter`).
 
 ---
 
