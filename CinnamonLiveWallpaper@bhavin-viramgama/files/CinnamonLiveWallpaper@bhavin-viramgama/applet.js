@@ -216,6 +216,8 @@ class LiveWallpaperApplet extends Applet.IconApplet {
                 this.startWallpaper();
                 return false;
             });
+        } else {
+            this.startWallpaper();
         }
     }
 

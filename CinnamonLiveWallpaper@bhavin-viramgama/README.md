@@ -74,7 +74,7 @@ Copy the applet files directory to your local Cinnamon applets directory:
 
 ```bash
 mkdir -p ~/.local/share/cinnamon/applets/
-cp -r files/CinnamonLiveWallpaper@bhavin-viramgama ~/.local/share/cinnamon/applets/
+cp -r CinnamonLiveWallpaper@bhavin-viramgama/files/CinnamonLiveWallpaper@bhavin-viramgama ~/.local/share/cinnamon/applets/
 ```
 
 ### 3. Install Required Dependencies
@@ -99,6 +99,17 @@ chmod +x ~/.local/share/cinnamon/applets/CinnamonLiveWallpaper@bhavin-viramgama/
 2. Locate **Live Wallpaper** under the installed applets list.
 3. Click the **`+`** button to add it to your panel.
 4. Right-click the applet icon and select **Configure** to select your video file or playlist.
+
+### 5. Uninstallation
+
+To completely remove the applet from your system:
+
+1. Right-click the applet icon on your panel and select **Remove 'Live Wallpaper'**.
+2. Delete the applet directory:
+   ```bash
+   rm -rf ~/.local/share/cinnamon/applets/CinnamonLiveWallpaper@bhavin-viramgama
+   ```
+3. Restart Cinnamon (`Alt` + `F2`, type `r`, `Enter`).
 
 ---
 
