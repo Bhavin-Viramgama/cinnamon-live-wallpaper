@@ -1,8 +1,0 @@
-{
-    "uuid": "live-wallpaper@bhavin-viramgama",
-    "name": "Live Wallpaper",
-    "description": "Sets a video as a live wallpaper using xwinwrap and mpv.",
-    "icon": "video-display",
-    "multiversion": false,
-    "version": "1.0"
-}
